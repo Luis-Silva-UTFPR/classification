@@ -1,7 +1,9 @@
 
 # Classificações de Frutas
 
-O seguinte projeto utiliza de um dataset contendo imagens de diversas frutas e utiliza-se de SVC para realizar a classificação das mesmas com base em treino.
+O seguinte projeto utiliza de um dataset contendo imagens de diversas frutas e utiliza-se de SVC com kernel `rbf` para realizar a classificação das mesmas com base em treino.
+
+Para realização do treino foram utilizadas imagens processadas por filtro de desfoque mediano, com o kernel `5x5`.
 
 
 ## Autores
@@ -29,7 +31,7 @@ O projeto irá classificar:
 Para treino, cada classe possui mais de 1900 imagens.
 Serão utilizada apenas 500 de cada por motivos performáticos.
 
-Serão plotados, as imagens com as labels preditas.
+Serão plotadas, as imagens com as labels preditas.
 Além também da matriz de confusão
 
 
@@ -104,3 +106,4 @@ pip install opencv-python
 - Pode-se alterar entre os kernels para verificar suas predições
 - Se seguidos os passos de estruturação das pastas, o código irá gerar o modelo de classificação sem a necessidade de demais ajustes
 - O código plota as imagens com as labels preditas pelo modelo.
+- Plota também a matriz de confusão, para melhor visualização.
