@@ -59,20 +59,6 @@ for fruit in fruits:
                 os.remove(caminho_imagem)
 
 
-class Rotulation:
-    def __init__(self):
-        self.test: list = []
-        self.train: list = []
-        self.valid: list = []
-
-
-class Images:
-    def __init__(self):
-        self.test: list = []
-        self.train: list = []
-        self.valid: list = []
-
-
 class TrainObjects:
     def __init__(
         self,
@@ -112,7 +98,8 @@ class TrainObjects:
         if not self.grey_images:
             self._get_grey_images()
         for image in self.grey_images:
-            image = cv2.medianBlur(image, 3)
+            # aumentado ksize para 5
+            image = cv2.medianBlur(image, 5)
             image = cv2.resize(image, [100, 100])
             self.blur_images.append(image.flatten())
             self.rotulation.append(fruits.get(self.name))
@@ -183,10 +170,6 @@ plt.tight_layout()
 plt.show()
 
 matriz_confusao = confusion_matrix(rotulation['test'], previsoes)
-
-print("Matriz de Confusão:")
-print(matriz_confusao)
-
 acuracia = accuracy_score(rotulation['test'], previsoes)
 print("Acurácia:", acuracia)
 
