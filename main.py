@@ -170,6 +170,10 @@ plt.tight_layout()
 plt.show()
 
 matriz_confusao = confusion_matrix(rotulation['test'], previsoes)
+
+print("Matriz de Confusão:")
+print(matriz_confusao)
+
 acuracia = accuracy_score(rotulation['test'], previsoes)
 print("Acurácia:", acuracia)
 
