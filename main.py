@@ -46,11 +46,8 @@ for fruit in fruits:
     imagens = os.listdir(pasta_origem)
     if len(imagens) > num_imagens_desejado:
         random.shuffle(imagens)
-
-        # Selecionar as imagens a serem mantidas
         imagens_mantidas = imagens[:num_imagens_desejado]
 
-        # Percorrer todas as imagens na pasta de origem
         for imagem in imagens:
             caminho_imagem = os.path.join(pasta_origem, imagem)
             # Verificar se a imagem deve ser excluída
@@ -74,6 +71,8 @@ class TrainObjects:
         self.grey_images: list = []
         self.blur_images: list = []
         self.rotulation: list = []
+        self.color_histograms: list = []
+        self.grey_histograms: list = []
 
     def _get_image_paths(self):
         paths = []
@@ -88,11 +87,60 @@ class TrainObjects:
         for image in self.image_paths[self.name]:
             self.colored_images.append(cv2.imread(image))
 
+    def _extract_color_histograms(self):
+        if not self.colored_images:
+            self._get_colored_images()
+
+        for image in self.colored_images:
+            hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+            hist_range = [(0, 180)]
+
+            # Calcular o histograma de matiz da imagem
+            hist_hue = cv2.calcHist(
+                [hsv_image],
+                [0],
+                None,
+                [180],
+                hist_range[0]
+            )
+
+            # Normalizar o histograma
+            hist_hue = cv2.normalize(hist_hue, hist_hue).flatten()
+            self.color_histograms.append(hist_hue)
+
+    def _plot_color_histograms(self, fruit: str = ''):
+        for histogram in self.color_histograms:
+            plt.plot(histogram)
+
+        plt.title(f'Color Histograms - {fruit}')
+        plt.xlabel('Bin')
+        plt.ylabel('Frequency')
+        plt.show()
+
     def _get_grey_images(self):
         if not self.colored_images:
             self._get_colored_images()
         for image in self.colored_images:
             self.grey_images.append(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY))
+
+    def _extract_grey_features(self):
+        if not self.grey_images:
+            self._get_grey_images()
+
+        for image in self.grey_images:
+            hist = cv2.calcHist([image], [0], None, [256], [0, 256])
+
+            hist_normalized = cv2.normalize(hist, hist).flatten()
+            self.grey_histograms.append(hist_normalized)
+
+    def _plot_grey_histograms(self, fruit: str = ''):
+        for histogram in self.grey_histograms:
+            plt.plot(histogram)
+
+        plt.title(f'Grey Histograms - {fruit}')
+        plt.xlabel('Bin')
+        plt.ylabel('Frequency')
+        plt.show()
 
     def _get_blur_images(self):
         if not self.grey_images:
@@ -117,7 +165,12 @@ for fruit in fruits:
     train = TrainObjects(fruit, train_folder)
     train._get_blur_images()
     test = TestObjects(fruit, test_folder)
+    test._extract_color_histograms()
+    test._plot_color_histograms(fruit)
     test._get_blur_images()
+    test._extract_grey_features()
+    test._plot_grey_histograms(fruit)
+
     valid = ValidObjects(fruit, valid_folder)
     valid._get_blur_images()
 
@@ -179,7 +232,6 @@ print("Acurácia:", acuracia)
 
 labels = list(fruits.keys())
 
-# Plotar a matriz de confusão como um heatmap
 plt.figure(figsize=(8, 6))
 sns.heatmap(
     matriz_confusao,

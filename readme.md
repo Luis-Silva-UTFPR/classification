@@ -14,6 +14,10 @@ Para realização do treino foram utilizadas imagens processadas por filtro de d
 ## 🔗 Dataset
 https://www.kaggle.com/datasets/utkarshsaxenadn/fruits-classification
 
+## 🔗 Vídeo de apresentação
+
+https://drive.google.com/file/d/1nkNK_lyiQtoYIVgdPBjm4YuMmKIgL8TR/view?usp=sharing
+
 
 
 ## Informações
